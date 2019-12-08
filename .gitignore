@@ -1,2 +1,4 @@
 .env
 gemini_bot.egg-info/
+
+.vscode/
