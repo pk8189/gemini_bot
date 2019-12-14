@@ -21,9 +21,9 @@ class Status(BaseCommand):
             print("You are logged in!")
         production_mode = getenv("PRODUCTION_MODE") == "True"
         if production_mode:
-            print("You are in production mode. Unset PRODUCTION_MODE=True to switch to sandbox mode")
+            print("You are in production mode. Unset PRODUCTION_MODE=True to switch to sandbox mode.")
         else:
-            print("You are in sandbox mode")
+            print("You are in sandbox mode.")
 
 
     def add_arguments(self, parser: ArgumentParser) -> None:
