@@ -1,5 +1,8 @@
 from argparse import ArgumentParser, Namespace
 from typing import Any, Callable
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 from gemini_bot.cli.commands import commands
 
@@ -14,6 +17,8 @@ def main() -> None:
     run(command, args)
 
 def run(command: Any, args: Namespace) -> Callable:
+    env_path = Path.cwd() / ".env"
+    load_dotenv(dotenv_path=env_path)
     try:
         return command.run(args)
     except SystemError as e:

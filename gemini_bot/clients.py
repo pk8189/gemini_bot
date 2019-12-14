@@ -1,4 +1,5 @@
-from os import environ
+from os import getenv
+from sys import exit
 
 import gemini
 
@@ -28,13 +29,15 @@ class PublicClient:
         return self.client.get_auction_history(symbol)
 
 class PrivateClient:
-    def __init__(self, sandbox=True):
-        self.api_key = environ.get("API_KEY", None)
-        self.private_key = environ.get("API_SECRET", None)
+    def __init__(self):
+        self.api_key = getenv("API_KEY", None)
+        self.private_key = getenv("API_SECRET", None)
+        self.sandbox = False if getenv("PRODUCTION_MODE", False) == "True" else True
         self.private_client = gemini.PrivateClient(
-            self.api_key, self.private_key, sandbox=sandbox
+            self.api_key, self.private_key, sandbox=self.sandbox
         ) if self.api_key and self.private_key else None
-        if not self.private_client:
-            raise EnvironmentError(
-                "Please add the API_KEY and API_SECRET to your environment"
-            )
+        
+    def get_balance(self):
+        if not self.sandbox:
+            return self.private_client.get_balance()
+        return "You must be in production mode to see your current balance."
