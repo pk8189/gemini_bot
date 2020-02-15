@@ -1,7 +1,6 @@
 from argparse import ArgumentParser, Namespace
 
 from gemini_bot.cli.base_command import BaseCommand
-from gemini_bot.utils.tasks import save_until_complete
 from gemini_bot.colors import greenit, redit, whiteit
 
 class Symbols(BaseCommand):

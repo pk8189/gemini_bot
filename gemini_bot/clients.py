@@ -8,7 +8,7 @@ from gemini_bot.utils.client_helpers import CustomGeminiPublicClient
 
 class GeminiPublicClient:
     def __init__(self):
-        self.client = gemini.GeminiPublicClient()
+        self.client = gemini.PublicClient()
         self.custom_client = CustomGeminiPublicClient()
 
     def symbols(self):
