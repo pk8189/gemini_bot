@@ -1,14 +1,14 @@
 from argparse import Namespace
 
-from gemini_bot.clients import PublicClient, PrivateClient
+from gemini_bot.clients import GeminiPublicClient, GeminiPrivateClient
 
 class BaseCommand():
 
     def run(self, args: Namespace):
         if "cli.commands.public" in self.__module__:
-            self.client = PublicClient()
+            self.client = GeminiPublicClient()
         if "cli.commands.private" in self.__module__:
-            self.client = PrivateClient()
+            self.client = GeminiPrivateClient()
         output = self.handle(args)
         return output
 

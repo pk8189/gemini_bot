@@ -1,6 +1,8 @@
 from argparse import ArgumentParser, Namespace
 
 from gemini_bot.cli.base_command import BaseCommand
+from gemini_bot.utils.tasks import save_until_complete
+from gemini_bot.colors import greenit, redit, whiteit
 
 class Symbols(BaseCommand):
 
@@ -12,19 +14,16 @@ class Symbols(BaseCommand):
     def add_arguments(self, parser: ArgumentParser) -> None:
         pass
 
-class GetTradeHistory(BaseCommand):
+class GetLast500Trades(BaseCommand):
 
-    name = "get_trade_history"
+    name = "get_last_500_trades"
 
     def handle(self, args: Namespace):
-        print(self.client.get_trade_history(args.symbol, args.since))
+        print(self.client.get_last_500_trade_history(args.symbol))
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument(
             "-s", "--symbol", required=True, help="Symbol to query"
-        )
-        parser.add_argument(
-            "-d", "--since", help="Date to get trade history since"
         )
 
 class GetTicker(BaseCommand):
@@ -44,7 +43,11 @@ class GetCurrentOrderBook(BaseCommand):
     name = "get_current_order_book"
 
     def handle(self, args: Namespace):
-        print(self.client.get_current_order_book(args.symbol))
+        res = self.client.get_current_order_book(args.symbol)
+        print(whiteit("Bids:"))
+        print(greenit(res["bids"]))
+        print(whiteit("Asks"))
+        print(redit(res["asks"]))
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument(

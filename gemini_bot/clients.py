@@ -1,11 +1,15 @@
 from os import getenv
-from sys import exit
-
 import gemini
+import requests
+import pandas as pd
+import pickle
 
-class PublicClient:
+from gemini_bot.utils.client_helpers import CustomGeminiPublicClient
+
+class GeminiPublicClient:
     def __init__(self):
-        self.client = gemini.PublicClient()
+        self.client = gemini.GeminiPublicClient()
+        self.custom_client = CustomGeminiPublicClient()
 
     def symbols(self):
         return self.client.symbols()
@@ -16,28 +20,61 @@ class PublicClient:
     def get_current_order_book(self, symbol):
         return self.client.get_current_order_book(symbol)
 
-    def get_trade_history(self, symbol, since=None):
-        if since:
-            return self.client.get_trade_history(symbol, since)
-        # if since is not supplied, the last 500 trades are returned.
+    def get_last_500_trade_history(self, symbol):
         return self.client.get_trade_history(symbol)
 
     def get_auction_history(self, symbol, since=None):
-        if since:
-            return self.client.get_auction_history(symbol, since)
-        # if since is not supplied, the last 500 trades are returned.
-        return self.client.get_auction_history(symbol)
+        return self.client.get_auction_history(symbol, since)
 
-class PrivateClient:
+
+class GeminiPrivateClient:
     def __init__(self):
         self.api_key = getenv("API_KEY", None)
         self.private_key = getenv("API_SECRET", None)
-        self.sandbox = False if getenv("PRODUCTION_MODE", False) == "True" else True
-        self.private_client = gemini.PrivateClient(
-            self.api_key, self.private_key, sandbox=self.sandbox
+        self.private_client = gemini.GeminiPrivateClient(
+            self.api_key, self.private_key, sandbox=False
         ) if self.api_key and self.private_key else None
         
     def get_balance(self):
-        if not self.sandbox:
-            return self.private_client.get_balance()
-        return "You must be in production mode to see your current balance."
+        return self.private_client.get_balance()
+
+    def new_order(self, symbol, amount, price, side):
+        order_res = self.private_client.new_order(
+            symbol,
+            amount,
+            price,
+            side,
+        )
+        return order_res
+
+
+
+"""
+"btcusd",
+"ethusd",
+"ltcusd",
+"zecusd",
+"zecbtc",
+"zeceth",
+"""
+# TODO: create the CLI for this.  the above comment are the valid download symbols
+def get_and_save_data(symbol, frequency):
+    crypto_data_download = "http://www.cryptodatadownload.com/cdd/Gemini"
+    base_url = f"{crypto_data_download}_{symbol.upper()}"
+    if frequency == "daily":
+        url = f"{base_url}_d.csv"
+    if frequency == "hourly":
+        url = f"{base_url}_1hr.csv"
+    if frequency == "minute":
+        url = f"{base_url}_2019_1min.csv"
+    df = pd.read_csv(url)
+    pickle_name = url.split("/")[-1].split(".")[0] + ".pkl"
+    with open(pickle_name, "wb") as pkl:
+        pickle.dump(df, pkl)
+
+
+
+
+
+
+

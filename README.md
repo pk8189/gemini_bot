@@ -16,7 +16,6 @@ To install currently:
 To use the gemini private API create a .env file at the directory you wish to use gemini_bot at.
 API_KEY=
 API_SECRET=
-PRODUCTION_MODE=
 
 ## What is gemini_bot currently.
 

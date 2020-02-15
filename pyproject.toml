@@ -9,6 +9,7 @@ license = "MIT"
 python = "^3.7"
 gemini_python = "^0.2.0"
 python-dotenv = "^0.10.3"
+pandas = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.4"

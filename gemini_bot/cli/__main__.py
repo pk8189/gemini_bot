@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from gemini_bot.cli.commands import commands
 
 def main() -> None:
+    env_path = Path.cwd() / ".env"
+    load_dotenv(dotenv_path=env_path)
     instantiated_commands = [C() for C in commands]
     parser = create_parser(commands)
     args, _ = parser.parse_known_args()
@@ -17,8 +19,6 @@ def main() -> None:
     run(command, args)
 
 def run(command: Any, args: Namespace) -> Callable:
-    env_path = Path.cwd() / ".env"
-    load_dotenv(dotenv_path=env_path)
     try:
         return command.run(args)
     except SystemError as e:
@@ -35,6 +35,3 @@ def create_parser(subcommands: list) -> ArgumentParser:
         subparser = subparsers.add_parser(subcommand.name)
         subcommand().add_arguments(subparser)
     return parser
-
-if __name__ == "__main__":
-    main()
