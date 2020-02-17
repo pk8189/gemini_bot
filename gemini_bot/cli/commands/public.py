@@ -1,7 +1,7 @@
 from argparse import ArgumentParser, Namespace
 
 from gemini_bot.cli.base_command import BaseCommand
-from gemini_bot.colors import greenit, redit, whiteit
+from gemini_bot.terminal_colors import success, warning, message
 
 class Symbols(BaseCommand):
 
@@ -43,10 +43,10 @@ class GetCurrentOrderBook(BaseCommand):
 
     def handle(self, args: Namespace):
         res = self.client.get_current_order_book(args.symbol)
-        print(whiteit("Bids:"))
-        print(greenit(res["bids"]))
-        print(whiteit("Asks"))
-        print(redit(res["asks"]))
+        print(message("Bids:"))
+        print(success(res["bids"]))
+        print(message("Asks"))
+        print(warning(res["asks"]))
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument(
