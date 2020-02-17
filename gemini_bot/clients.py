@@ -31,7 +31,7 @@ class GeminiPrivateClient:
     def __init__(self):
         self.api_key = getenv("API_KEY", None)
         self.private_key = getenv("API_SECRET", None)
-        self.private_client = gemini.GeminiPrivateClient(
+        self.private_client = gemini.PrivateClient(
             self.api_key, self.private_key, sandbox=False
         ) if self.api_key and self.private_key else None
         
@@ -67,7 +67,10 @@ def get_and_save_data(symbol, frequency):
         url = f"{base_url}_1hr.csv"
     if frequency == "minute":
         url = f"{base_url}_2019_1min.csv"
-    df = pd.read_csv(url)
+    try:
+        df = pd.read_csv(url)
+    except ValueError as value_err:
+        raise value_err
     pickle_name = url.split("/")[-1].split(".")[0] + ".pkl"
     with open(pickle_name, "wb") as pkl:
         pickle.dump(df, pkl)
