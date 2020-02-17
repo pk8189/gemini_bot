@@ -47,37 +47,21 @@ class GeminiPrivateClient:
         )
         return order_res
 
+class CryptoDataDownloadClient:
+    def __init__(self):
+        self.daily_crypto_data_download = "http://www.cryptodatadownload.com/cdd/Gemini"
+        self.others_crypto_data_download = "http://www.cryptodatadownload.com/cdd/gemini"
 
-
-"""
-"btcusd",
-"ethusd",
-"ltcusd",
-"zecusd",
-"zecbtc",
-"zeceth",
-"""
-# TODO: create the CLI for this.  the above comment are the valid download symbols
-def get_and_save_data(symbol, frequency):
-    crypto_data_download = "http://www.cryptodatadownload.com/cdd/Gemini"
-    base_url = f"{crypto_data_download}_{symbol.upper()}"
-    if frequency == "daily":
-        url = f"{base_url}_d.csv"
-    if frequency == "hourly":
-        url = f"{base_url}_1hr.csv"
-    if frequency == "minute":
-        url = f"{base_url}_2019_1min.csv"
-    try:
-        df = pd.read_csv(url)
-    except ValueError as value_err:
-        raise value_err
-    pickle_name = url.split("/")[-1].split(".")[0] + ".pkl"
-    with open(pickle_name, "wb") as pkl:
-        pickle.dump(df, pkl)
-
-
-
-
-
-
-
+    def get_and_save_data(self, symbol: str, frequency: str) -> str:
+        if frequency == "d":
+            url = f"{self.daily_crypto_data_download}_{symbol.upper()}_{frequency}.csv"
+        else:
+            url = f"{self.others_crypto_data_download}_{symbol.upper()}_{frequency}.csv"
+        try:
+            df = pd.read_csv(url)
+        except ValueError as value_err:
+            raise value_err
+        pickle_name = url.split("/")[-1].split(".")[0] + ".pkl"
+        with open(pickle_name, "wb") as pkl:
+            pickle.dump(df, pkl)
+            return pickle_name
