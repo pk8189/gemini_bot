@@ -9,9 +9,6 @@ class BaseCommand():
             self.client = GeminiPublicClient()
         if "cli.commands.private" in self.__module__:
             self.client = GeminiPrivateClient()
+        # pylint: disable=maybe-no-member
         output = self.handle(args)
         return output
-
-    def handle(self, args: Namespace):
-        """Entry point"""
-        raise NotImplementedError

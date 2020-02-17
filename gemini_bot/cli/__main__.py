@@ -14,8 +14,8 @@ def main() -> None:
     public_commands = [C for (name, C) in inspect.getmembers(public, inspect.isclass) if C.__bases__[0] == BaseCommand]
     private_commands = [C for (name, C) in inspect.getmembers(private, inspect.isclass) if C.__bases__[0] == BaseCommand]
     commands = public_commands + private_commands
-    instantiated_commands = [C() for C in commands]
     parser = create_parser(commands)
+    instantiated_commands = [C() for C in commands]
     args, _ = parser.parse_known_args()
     cs = {command.name: command for command in instantiated_commands}
     command = cs.get(args.command, None)
